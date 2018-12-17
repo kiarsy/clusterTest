@@ -94,7 +94,7 @@ FailureDetector.prototype.pingReqMember = function (random, member) {
     //PingReq Timeout
     clearTimeout(this.pingReqTimeout[member.socketAddress]);
     this.pingReqTimeout[member.socketAddress] = setTimeout(() => {
-        console.log('pingReq>retry');
+        console.log('pingReq>retry', this.pingReqCount[member.socketAddress]);
         self.pingReqMember(random, member);
     }, this.pingReq.timeout);
 

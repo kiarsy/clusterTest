@@ -1,5 +1,4 @@
-const SWIM = require('./SWIM/swim'),
-    Socket = require('./SWIM/SocketComponent');
+const SWIM = require('./SWIM/swim');
 
 var x1 = new SWIM({
     local: {

@@ -1,42 +1,40 @@
-
-lstServices = []
-    , lstDepend = []
-    , ssdpPort = 1900
-    , ssdpMultiastIp = '239.255.255.250'
-
 const util = require('util')
-    , Server = require('./server')
-    , Client = require('./client')
+    , Server = require('./ServerComponent')
+    , Client = require('./ClientComponent')
     , EventEmitter = require('events');
 
-var server = undefined,
-    client = undefined;
+function ServiceDiscovery(opt) {
+    this.ssdpPort = (opt && opt.ssdpPort) || ServiceDiscovery.Defaults.ssdpPort;
+    this.ssdpMultiastIP = (opt && opt.ssdpMultiastIP) || ServiceDiscovery.Defaults.ssdpMultiastIP;
 
-function ServiceDiscovery() {
-    server = new Server(this);
-    client = new Client(this);
+    this.server = new Server({ serviceDiscovery: this, ssdpPort: this.ssdpPort, ssdpMultiastIP: this.ssdpMultiastIP });
+    this.client = new Client({ serviceDiscovery: this, ssdpPort: this.ssdpPort, ssdpMultiastIP: this.ssdpMultiastIP });
 }
 util.inherits(ServiceDiscovery, EventEmitter);
 
 //SOCKETS
-ServiceDiscovery.prototype.start = () => {
-    client.start();
-    server.start();
+ServiceDiscovery.prototype.start = function () {
+    this.client.start();
+    this.server.start();
 };
 
-ServiceDiscovery.prototype.stop = () => {
-    client.stop();
-    server.stop();
+ServiceDiscovery.prototype.stop = function () {
+    this.client.stop();
+    this.server.stop();
 };
 
 //CLIENT
-ServiceDiscovery.prototype.register = (type, name, cb) => {
-    client.register(type, name, cb);
+ServiceDiscovery.prototype.register = function (type, name, cb) {
+    this.client.register(type, name, cb);
 };
 
-ServiceDiscovery.prototype.find = (type, cb) => {
-    client.find(type, cb);
+ServiceDiscovery.prototype.find = function (type, cb) {
+    this.client.find(type, cb);
 };
 
+ServiceDiscovery.Defaults = {
+    ssdpPort: 1900,
+    ssdpMultiastIP: '239.255.255.250'
+}
 module.exports = ServiceDiscovery;
 
