@@ -97,18 +97,34 @@ MembershipComponent.prototype.next = function () {
     return undefined;
 }
 
-MembershipComponent.prototype.random = function (except, sender) {
-    var lst = Object.keys(this.services).filter((key) => {
-        return this.services[key].state == 0 && key != except.socketAddress && (!sender || key != sender.socketAddress);
-    });
+MembershipComponent.prototype.random = function (except, sender, count) {
+    var lstServices = [];
+    var self = this;
+    //TODO: need to improve
+    //1:findout better way
+    //2:it may select a node multiple times
+    function select() {
+        console.log('lstServices select');
 
-    var rnd = Math.floor(Math.random() * lst.length) + 0;
+        var lst = Object.keys(self.services).filter((key) => {
+            return self.services[key].state == 0 && key != except.socketAddress && (!sender || key != sender.socketAddress);
+        });
 
-    var nextService = this.services[lst[rnd]];
+        var rnd = Math.floor(Math.random() * lst.length) + 0;
+        if (self.services[lst[rnd]])
+            lstServices.push(self.services[lst[rnd]]);
 
+        count--;
+        if (count > 0) {
+            select();
+        }
+    }
+    select();
 
-    if (nextService)
-        return nextService;
+    console.log(Object.keys(lstServices));
+
+    if (lstServices)
+        return lstServices;
 
     return undefined;
 

@@ -34,7 +34,6 @@ function Swim(options) {
         },
         pingReq: {
             count: ((options.pingReq && options.pingReq.count) || Swim.Defaults.pingReq.count),
-            interval: ((options.pingReq && options.pingReq.interval) || Swim.Defaults.pingReq.interval),
             timeout: ((options.pingReq && options.pingReq.timeout) || Swim.Defaults.pingReq.timeout),
         }
     });
@@ -79,7 +78,6 @@ Swim.Defaults = {
     pingReq: {
         count: 2,
         timeout: 1000,
-        interval: 3000  //** ping.timeout * pingReq.count */
     },
     suspect: {
         timeout: 10000
